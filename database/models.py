@@ -16,8 +16,11 @@ class customer(models.Model):
     comment = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'customer'
+
+    def __str__(self):
+        return self.name
 
 
 class inventory(models.Model):
@@ -27,7 +30,7 @@ class inventory(models.Model):
     operation = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'inventory'
 
 
@@ -40,7 +43,7 @@ class pawn(models.Model):
     pawn_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'pawn'
       #  unique_together = ['customer_id', 'inventory_id']
 
@@ -54,6 +57,6 @@ class receive(models.Model):
     receive_total_amt = models.IntegerField()
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'receive'
        # unique_together = ['receive_id', 'inventory_id']
