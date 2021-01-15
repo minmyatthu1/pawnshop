@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Customer page{% endblock %}
+
+
+{% block content %}
+
+
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            {{form}}
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+    <input type='submit' value='submit' class="btn btn-primary">
+</form>
+{% endblock %}

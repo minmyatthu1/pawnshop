@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.utils import timezone
 
 
 class customer(models.Model):
@@ -16,11 +17,11 @@ class customer(models.Model):
     comment = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'customer'
 
     def __str__(self):
-        return self.name
+        return f" {self.customer_id} , {self.name}"
 
 
 class inventory(models.Model):
@@ -28,24 +29,33 @@ class inventory(models.Model):
     item_name = models.CharField(max_length=100, blank=True, null=True)
     item_type = models.CharField(max_length=50, blank=True, null=True)
     operation = models.CharField(max_length=50, blank=True, null=True)
+    comment= models.CharField(max_length=100, blank=True, null=True)
+    weight= models.CharField(max_length=20, blank=True, null=True)
+    
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'inventory'
+    
+    def __str__(self):
+        return self.item_name
 
 
 class pawn(models.Model):
     pawn_id = models.AutoField(db_column='pawn_id',primary_key=True)  # Field name made lowercase.
     customer_id = models.ForeignKey(customer, models.DO_NOTHING, db_column='customer_id')  # Field name made lowercase.
     inventory_id = models.ForeignKey(inventory, models.DO_NOTHING, db_column='inventory_id')  # Field name made lowercase.
-    invoice_number = models.IntegerField(blank=True, null=True)
+    invoice_number = models.CharField(max_length=10, null=True)
     pawn_amt = models.IntegerField(blank=True, null=True)
-    pawn_date = models.DateTimeField(blank=True, null=True)
+    pawn_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'pawn'
       #  unique_together = ['customer_id', 'inventory_id']
+
+    def __str__(self):
+        return f"{self.invoice_number, self.customer_id, self.pawn_amt}"
 
 
 class receive(models.Model):
@@ -57,6 +67,6 @@ class receive(models.Model):
     receive_total_amt = models.IntegerField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'receive'
        # unique_together = ['receive_id', 'inventory_id']
