@@ -1,12 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from database.models import pawn
+from database.models import pawn,inventory
 from .forms import *
 from django.http import HttpResponseRedirect
 
 # Create your views here.
-def pawn_main(request):
-    return render(request,'pawn.html', {})
-
 
 def detail_pawn(request,pawn_id=None):
     pawn_list = get_object_or_404(pawn, pk= pawn_id)
@@ -17,14 +14,24 @@ def detail_pawn(request,pawn_id=None):
 
 def create_pawn(request):
     if request.method=='POST':
-        form= pawn_form(request.POST)
-        if form.is_valid():
-            form.save()
+        pawnform= pawn_form(request.POST)
+        inventoryform= inventory_form(request.POST)
+
+        if pawnform.is_valid() and inventoryform.is_valid():
+            inventoryform.save()
+            pawn=pawnform.save(commit=False)
+
+            pawn.inventory_id = inventory.objects.latest('inventory_id')
+            # pawn.inventory_id= raw_inventory
+            pawn.save()
+            
             
     else:
-        form=pawn_form()
+        pawnform=pawn_form()
+        inventoryform=inventory_form(initial = {'operation': "p"})
     
-    return render(request, 'pawn.html', {'form':form})
+    return render(request, 'pawn.html', {'pawn_form':pawnform, 'inventory_form':inventoryform })
+
 
 def create_customer(request):
     if request.method=='POST':
@@ -37,4 +44,6 @@ def create_customer(request):
         form=customer_form()
 
     return render(request, 'customer.html',{'form': form })
+
+
 

@@ -12,13 +12,15 @@
     {% csrf_token %}
     <div class="row">
         <div class="col">
-            {{form}}
+            {{pawn_form}}
 
         </div>
         <div class="col">
             <a class="btn btn-primary" id="add_id_customer_id" href="http://localhost:8000/pawn/customer"
                 title="Add another customer"><img src="/static/admin/img/icon-addlink.svg" alt="Add"> Add new
-                customer</a>
+                customer</a><br /> <br />
+
+            {{inventory_form}}
         </div>
     </div>
 

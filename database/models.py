@@ -13,7 +13,7 @@ class customer(models.Model):
     customer_id = models.AutoField(db_column='customer_id', primary_key=True)  # Field name made lowercase.
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
-    point = models.DecimalField(max_digits=10, decimal_places=5, blank=True, null=True)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    point = models.IntegerField(blank=True, null=True)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
     comment = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -28,7 +28,7 @@ class inventory(models.Model):
     inventory_id = models.AutoField(db_column='inventory_id', primary_key=True)  # Field name made lowercase.
     item_name = models.CharField(max_length=100, blank=True, null=True)
     item_type = models.CharField(max_length=50, blank=True, null=True)
-    operation = models.CharField(max_length=50, blank=True, null=True)
+    operation = models.CharField(max_length=10, blank=True, null=True)
     comment= models.CharField(max_length=100, blank=True, null=True)
     weight= models.CharField(max_length=20, blank=True, null=True)
     
@@ -38,7 +38,7 @@ class inventory(models.Model):
         db_table = 'inventory'
     
     def __str__(self):
-        return self.item_name
+        return f"{self.inventory_id}, {self.item_name}"
 
 
 class pawn(models.Model):
@@ -47,7 +47,8 @@ class pawn(models.Model):
     inventory_id = models.ForeignKey(inventory, models.DO_NOTHING, db_column='inventory_id')  # Field name made lowercase.
     invoice_number = models.CharField(max_length=10, null=True)
     pawn_amt = models.IntegerField(blank=True, null=True)
-    pawn_date = models.DateTimeField(default=timezone.now)
+    pawn_date = models.DateField(default=timezone.now)
+    created_time = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = True
@@ -55,7 +56,7 @@ class pawn(models.Model):
       #  unique_together = ['customer_id', 'inventory_id']
 
     def __str__(self):
-        return f"{self.invoice_number, self.customer_id, self.pawn_amt}"
+        return f"{self.pawn_id, self.invoice_number, self.customer_id, self.pawn_amt}"
 
 
 class receive(models.Model):
